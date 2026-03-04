@@ -219,23 +219,39 @@ document.addEventListener("DOMContentLoaded", () => {
   counters.forEach((counter) => counterObserver.observe(counter));
 
   // ══════════════════════════════════════
-  // 8. CONTACT FORM (demo)
+  // 8. CONTACT FORM (EmailJS)
   // ══════════════════════════════════════
+  emailjs.init("DsECPV3AXDWk-kuv8");
+
   contactForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const btn = contactForm.querySelector("button[type='submit']");
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-check"></i> Envoyé !';
-    btn.style.background = "#10b981";
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Envoi...';
     btn.disabled = true;
 
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.style.background = "";
-      btn.disabled = false;
-      contactForm.reset();
-    }, 3000);
+    emailjs.sendForm("service_0wxucvh", "template_05ssg3g", contactForm)
+      .then(() => {
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Envoyé !';
+        btn.style.background = "#10b981";
+        contactForm.reset();
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = "";
+          btn.disabled = false;
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error("EmailJS error:", error);
+        btn.innerHTML = '<i class="fa-solid fa-xmark"></i> Erreur !';
+        btn.style.background = "#ef4444";
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = "";
+          btn.disabled = false;
+        }, 3000);
+      });
   });
 
   // ══════════════════════════════════════
