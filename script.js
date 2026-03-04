@@ -221,7 +221,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // ══════════════════════════════════════
   // 8. CONTACT FORM (EmailJS)
   // ══════════════════════════════════════
-  emailjs.init("DsECPV3AXDWk-kuv8");
+  (function() {
+    try {
+      emailjs.init({ publicKey: "DsECPV3AXDWk-kuv8" });
+    } catch(err) {
+      console.error("EmailJS init failed:", err);
+    }
+  })();
 
   contactForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -231,7 +237,14 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Envoi...';
     btn.disabled = true;
 
-    emailjs.sendForm("service_0wxucvh", "template_05ssg3g", contactForm)
+    const params = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      title: document.getElementById("subject").value,
+      message: document.getElementById("message").value,
+    };
+
+    emailjs.send("service_0wxucvh", "template_05ssg3g", params)
       .then(() => {
         btn.innerHTML = '<i class="fa-solid fa-check"></i> Envoyé !';
         btn.style.background = "#10b981";
@@ -244,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         console.error("EmailJS error:", error);
+        alert("Erreur : " + JSON.stringify(error));
         btn.innerHTML = '<i class="fa-solid fa-xmark"></i> Erreur !';
         btn.style.background = "#ef4444";
         setTimeout(() => {
