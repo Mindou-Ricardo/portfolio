@@ -538,6 +538,9 @@ ul {
 .skill-card .fa-git-alt {
   color: #f05032;
 }
+.skill-card .fa-brain {
+  color: #9333ea;
+}
 
 .skill-card h3 {
   font-size: 1rem;
